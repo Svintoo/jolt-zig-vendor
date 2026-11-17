@@ -19,6 +19,66 @@
             .hash = "translate_c-2.0.2-Q_BUWvBNBwDnyehSiuAJmdFcMYHYGA-Jc3KiYdrV2Dqx",
         },
         // prebuilt begin
+        .prebuilt_aarch64_linux_debug = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-aarch64-linux-debug.tar.gz",
+            .hash = "N-V-__8AAE7OXQTIrWZhPqv1TTdZVvSdyVRyZpJY252mXa0Y",
+            .lazy = true,
+        },
+        .prebuilt_aarch64_linux_release = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-aarch64-linux-release.tar.gz",
+            .hash = "N-V-__8AAAblxwNRVLlFV8HHoxZOAoulbJP1wutrD3DSsxe3",
+            .lazy = true,
+        },
+        .prebuilt_aarch64_macos_debug = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-aarch64-macos-debug.tar.gz",
+            .hash = "N-V-__8AAKqKaQS0JaA3CSO5YUzsA8sdasA_7aAgkUMwrwSr",
+            .lazy = true,
+        },
+        .prebuilt_aarch64_macos_release = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-aarch64-macos-release.tar.gz",
+            .hash = "N-V-__8AANJVlwPh2IqtCkUYfJzOBgUP-Fp4lXpi38GFBYNy",
+            .lazy = true,
+        },
+        .prebuilt_aarch64_windows_debug = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-aarch64-windows-debug.tar.gz",
+            .hash = "N-V-__8AAGKE9wO06MsXdyFAFt3spr3wy8gMYRTKwYZsbk2V",
+            .lazy = true,
+        },
+        .prebuilt_aarch64_windows_release = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-aarch64-windows-release.tar.gz",
+            .hash = "N-V-__8AAIZW9wHlOpUBZT9G6cJ2QTiufg6AbM9lRZ3Z1Vax",
+            .lazy = true,
+        },
+        .prebuilt_x86_64_linux_debug = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-x86_64-linux-debug.tar.gz",
+            .hash = "N-V-__8AAEY3OQQsF_rZCVD-PWzET5hRc4xl_PUefk7bMwEy",
+            .lazy = true,
+        },
+        .prebuilt_x86_64_linux_release = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-x86_64-linux-release.tar.gz",
+            .hash = "N-V-__8AAOT_XgM605WEpNfFypfgH7yRmWvreqYh6xwX5Nyt",
+            .lazy = true,
+        },
+        .prebuilt_x86_64_macos_debug = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-x86_64-macos-debug.tar.gz",
+            .hash = "N-V-__8AAJptXgRNQ3_WViw8ifiolA2RpbFiW3E-Zp7hvX-q",
+            .lazy = true,
+        },
+        .prebuilt_x86_64_macos_release = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-x86_64-macos-release.tar.gz",
+            .hash = "N-V-__8AAIoEiAP1FTstp3Htz3SnCfsSPZ42IBBmb9QEtlPx",
+            .lazy = true,
+        },
+        .prebuilt_x86_64_windows_debug = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-x86_64-windows-debug.tar.gz",
+            .hash = "N-V-__8AAPAyrQPZiVXBWcS_GbvSEBRhkVbk2xvAgN4YipLd",
+            .lazy = true,
+        },
+        .prebuilt_x86_64_windows_release = .{
+            .url = "https://github.com/ali-shahwali/jolt-zig-vendor/releases/download/r2/joltc-x86_64-windows-release.tar.gz",
+            .hash = "N-V-__8AADZK4AHU9BCevulGIikAG6yhdtbjeZVlbligZOqU",
+            .lazy = true,
+        },
         // prebuilt end
     },
     .paths = .{
