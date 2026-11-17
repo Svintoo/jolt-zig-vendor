@@ -1,0 +1,119 @@
+# Builds the Jolt library for each target and publishes it as a release. The release tag is a commit whose
+# build.zig.zon points at the release, so fetching the tag gets the prebuilt libraries. It runs only when started by hand.
+name: Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  ZIG_VERSION: 0.17.1
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }} ${{ matrix.mode }}
+    # The release job commits build.zig.zon back to the branch, so a tag cannot start it.
+    if: github.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        target:
+          - aarch64-macos
+          - x86_64-macos
+          - aarch64-linux-gnu
+          - x86_64-linux-gnu
+          - aarch64-windows-gnu
+          - x86_64-windows-gnu
+        mode: [debug, release]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: ${{ env.ZIG_VERSION }}
+
+      - name: Build
+        run: |
+          optimize=debug
+          if [ "${{ matrix.mode }}" = release ]; then optimize=fast; fi
+          zig build install -Dsource=true -Dtarget=${{ matrix.target }} -Doptimize=$optimize --prefix out
+          if [ "${{ matrix.target }}" = x86_64-linux-gnu ]; then
+            zig build test -Dsource=true -Doptimize=$optimize
+          fi
+
+      - name: Package
+        run: |
+          name="$(echo '${{ matrix.target }}' | cut -d- -f1,2)"
+          tar -czf "joltc-${name}-${{ matrix.mode }}.tar.gz" -C out lib include
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: joltc-${{ matrix.target }}-${{ matrix.mode }}
+          path: joltc-*.tar.gz
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      TAG: r${{ github.run_number }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: ${{ env.ZIG_VERSION }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: joltc-*
+          path: assets
+          merge-multiple: true
+
+      # The package hashes come from the local archives, so build.zig.zon is ready before the upload.
+      - name: Commit build.zig.zon and tag the commit
+        run: |
+          scripts/update_prebuilt.sh "$TAG" assets
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add build.zig.zon
+          git commit -m "Use prebuilt libraries from $TAG"
+          git tag "$TAG"
+          git push origin "refs/tags/$TAG"
+
+      - name: Create release
+        run: |
+          gh release create "$TAG" assets/*.tar.gz \
+            --verify-tag \
+            --title "$TAG" \
+            --notes "Prebuilt Jolt libraries, built from $GITHUB_SHA."
+
+      # Without -Dsource, a build with no prebuilt library fails, so these tests use the new release.
+      - name: Test the prebuilt libraries
+        run: |
+          zig build test -Doptimize=debug
+          zig build test -Doptimize=fast
+
+      # A fast-forward only: the push fails if the branch moved during the run.
+      - name: Move the branch to the tag
+        run: git push origin "HEAD:$GITHUB_REF_NAME"
+
+      - name: Delete the release and the tag after a failure
+        if: failure()
+        run: |
+          gh release delete "$TAG" --yes --cleanup-tag || true
+          git push origin --delete "refs/tags/$TAG" || true
